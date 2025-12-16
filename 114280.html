@@ -8,21 +8,27 @@
   </head>
   <body>
 <!DOCTYPE html>
+<option value="4" selected>4 位數</option>
 <option value="5">5 位數</option>
 </select>
 </div>
-
-
+<!-- 玩家輸入 -->
 <div class="section">
-<label>玩家猜的數字（依選擇位數，不可重複）</label>
+<label>玩家猜的數字（不可重複）</label>
 <input type="text" id="guess" placeholder="例如：1234" />
 <button onclick="checkAB()">送出猜測</button>
 <div class="result" id="result"></div>
+</div>
+
+
+<!-- 猜測紀錄 -->
+<div class="section">
+<label>猜測紀錄</label>
 <div class="history" id="history">尚未開始猜測</div>
 </div>
 
 
-<!-- 玩家筆記區 -->
+<!-- 筆記區 -->
 <div class="section">
 <label>玩家筆記區</label>
 <textarea placeholder="在這裡記錄你的推理與線索..."></textarea>
@@ -44,22 +50,23 @@ return digits.join("");
 
 
 let digitCount = 4;
-let guessCount = 0;
 let answer = generateAnswer(digitCount);
-// 系統答案（可之後改成隨機）
+let guessCount = 0;
 
 
 function checkAB() {
-guessCount++;
 const guess = document.getElementById("guess").value;
-let A = 0;
-let B = 0;
 
 
 if (guess.length !== digitCount) {
 document.getElementById("result").innerText = `請輸入 ${digitCount} 位數字`;
 return;
 }
+
+
+guessCount++;
+let A = 0;
+let B = 0;
 
 
 for (let i = 0; i < digitCount; i++) {
@@ -71,16 +78,24 @@ B++;
 }
 
 
-document.getElementById("result").innerText = `${A}A ${B}B`;
+const resultDiv = document.getElementById("result");
 const historyDiv = document.getElementById("history");
+
+
 if (historyDiv.innerText === "尚未開始猜測") historyDiv.innerText = "";
+
+
 historyDiv.innerHTML += `第 ${guessCount} 次：${guess} → ${A}A ${B}B<br>`;
 
 
 if (A === digitCount) {
-document.getElementById("result").innerText = "Congratulations!! 🎉";
+resultDiv.innerText = "Congratulations!! 🎉";
+} else {
+resultDiv.innerText = `${A}A ${B}B`;
 }
 }
+
+
 function restartGame() {
 digitCount = parseInt(document.getElementById("digitCount").value);
 answer = generateAnswer(digitCount);
@@ -89,7 +104,6 @@ document.getElementById("guess").value = "";
 document.getElementById("result").innerText = "";
 document.getElementById("history").innerText = "尚未開始猜測";
 document.getElementById("guess").placeholder = `例如：${"12345".slice(0, digitCount)}`;
-}`;
 }
 </script>
 </body>
