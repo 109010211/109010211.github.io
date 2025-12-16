@@ -10,3 +10,85 @@
       hello world
   </body>
 </html>
+<!DOCTYPE html>
+}
+.container {
+max-width: 500px;
+margin: auto;
+background: white;
+padding: 20px;
+border-radius: 8px;
+}
+.section {
+margin-bottom: 20px;
+}
+input, textarea, button {
+width: 100%;
+padding: 8px;
+margin-top: 8px;
+box-sizing: border-box;
+}
+textarea {
+height: 100px;
+}
+.result {
+font-weight: bold;
+margin-top: 10px;
+}
+</style>
+</head>
+<body>
+<h1>幾A幾B 猜數字遊戲</h1>
+<div class="container">
+
+
+<!-- 玩家輸入猜測 -->
+<div class="section">
+<label>玩家猜的數字（4 位不重複）</label>
+<input type="text" id="guess" placeholder="例如：1234" />
+<button onclick="checkAB()">送出猜測</button>
+<div class="result" id="result"></div>
+</div>
+
+
+<!-- 玩家筆記區 -->
+<div class="section">
+<label>玩家筆記區</label>
+<textarea placeholder="在這裡記錄你的推理與線索..."></textarea>
+</div>
+
+
+</div>
+
+
+<script>
+// 系統答案（可之後改成隨機）
+const answer = "1234";
+
+
+function checkAB() {
+const guess = document.getElementById("guess").value;
+let A = 0;
+let B = 0;
+
+
+if (guess.length !== 4) {
+document.getElementById("result").innerText = "請輸入 4 位數字";
+return;
+}
+
+
+for (let i = 0; i < 4; i++) {
+if (guess[i] === answer[i]) {
+A++;
+  } else if (answer.includes(guess[i])) {
+B++;
+}
+}
+
+
+document.getElementById("result").innerText = `${A}A ${B}B`;
+}
+</script>
+</body>
+</html>
