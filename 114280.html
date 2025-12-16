@@ -1,163 +1,91 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="UTF-8" />
-  <title>數字推理</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #74ebd5, #acb6e5);
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    .container {
-      max-width: 520px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-    }
-    .section {
-      margin-bottom: 20px;
-    }
-    label {
-      font-weight: bold;
-    }
-    input, textarea, button, select {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      box-sizing: border-box;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-    }
-    button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    textarea {
-      height: 100px;
-    }
-    .result {
-      font-weight: bold;
-      margin-top: 10px;
-      font-size: 18px;
-      text-align: center;
-    }
-    .history {
-      background: #f2f2f2;
-      padding: 10px;
-      border-radius: 6px;
-      max-height: 150px;
-      overflow-y: auto;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8" />
+<title>數字推理</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+background: linear-gradient(135deg, #74ebd5, #acb6e5);
+padding: 20px;
+}
+h1 {
+text-align: center;
+color: #333;
+}
+.container {
+max-width: 520px;
+margin: auto;
+background: white;
+padding: 25px;
+border-radius: 12px;
+box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+.section {
+margin-bottom: 20px;
+}
+label {
+font-weight: bold;
+}
+input, textarea, button, select {
+width: 100%;
+padding: 10px;
+margin-top: 8px;
+box-sizing: border-box;
+border-radius: 6px;
+border: 1px solid #ccc;
+font-size: 14px;
+}
+button {
+background: #4CAF50;
+color: white;
+border: none;
+cursor: pointer;
+}
+button:hover {
+background: #45a049;
+}
+textarea {
+height: 100px;
+}
+.result {
+font-weight: bold;
+margin-top: 10px;
+font-size: 18px;
+text-align: center;
+}
+.history {
+background: #f2f2f2;
+padding: 10px;
+border-radius: 6px;
+max-height: 150px;
+overflow-y: auto;
+font-size: 14px;
+}
+</style>
 </head>
 <body>
-  <h1>數字推理</h1>
+<h1>數字推理</h1>
 
-  <div class="container">
 
-    <!-- 選擇位數 -->
-    <div class="section">
-      <label>選擇謎底位數</label>
-      <select id="digitCount" onchange="restartGame()">
-        <option value="3">3 位數</option>
-        <option value="4" selected>4 位數</option>
-        <option value="5">5 位數</option>
-      </select>
-    </div>
+<div class="container">
 
-    <!-- 玩家輸入 -->
-    <div class="section">
-      <label>玩家猜的數字（不可重複）</label>
-      <input type="text" id="guess" placeholder="例如：1234" />
-      <button onclick="checkAB()">送出猜測</button>
-      <div class="result" id="result"></div>
-    </div>
 
-    <!-- 猜測紀錄 -->
-    <div class="section">
-      <label>猜測紀錄</label>
-      <div class="history" id="history">尚未開始猜測</div>
-    </div>
+<!-- 選擇位數 -->
+<div class="section">
+<label>選擇謎底位數</label>
+<select id="digitCount" onchange="restartGame()">
+<option value="3">3 位數</option>
+<option value="4" selected>4 位數</option>
+<option value="5">5 位數</option>
+</select>
+</div>
 
-    <!-- 筆記區 -->
-    <div class="section">
-      <label>玩家筆記區</label>
-      <textarea placeholder="在這裡記錄你的推理與線索..."></textarea>
-    </div>
 
-  </div>
-
-  <script>
-    function generateAnswer(len) {
-      let digits = [];
-      while (digits.length < len) {
-        let d = Math.floor(Math.random() * 10).toString();
-        if (!digits.includes(d)) digits.push(d);
-      }
-      return digits.join("");
-    }
-
-    let digitCount = 4;
-    let answer = generateAnswer(digitCount);
-    let guessCount = 0;
-
-    function checkAB() {
-      const guess = document.getElementById("guess").value;
-
-      if (guess.length !== digitCount) {
-        document.getElementById("result").innerText = `請輸入 ${digitCount} 位數字`;
-        return;
-      }
-
-      guessCount++;
-      let A = 0;
-      let B = 0;
-
-      for (let i = 0; i < digitCount; i++) {
-        if (guess[i] === answer[i]) {
-          A++;
-        } else if (answer.includes(guess[i])) {
-          B++;
-        }
-      }
-
-      const resultDiv = document.getElementById("result");
-      const historyDiv = document.getElementById("history");
-
-      if (historyDiv.innerText === "尚未開始猜測") historyDiv.innerText = "";
-
-      historyDiv.innerHTML += `第 ${guessCount} 次：${guess} → ${A}A ${B}B<br>`;
-
-      if (A === digitCount) {
-        resultDiv.innerText = "Congratulations!! 🎉";
-      } else {
-        resultDiv.innerText = `${A}A ${B}B`;
-      }
-    }
-
-    function restartGame() {
-      digitCount = parseInt(document.getElementById("digitCount").value);
-      answer = generateAnswer(digitCount);
-      guessCount = 0;
-      document.getElementById("guess").value = "";
-      document.getElementById("result").innerText = "";
-      document.getElementById("history").innerText = "尚未開始猜測";
-      document.getElementById("guess").placeholder = `例如：${"12345".slice(0, digitCount)}`;
-    }
-  </script>
-</body>
-</html>
+<!-- 玩家輸入 -->
+<div class="section">
+<label>玩家猜的數字（不可重複）</label>
+<input type="text" id="guess" placeholder="例如：1234" />
+<button onclick="checkAB()">送出猜測</button>
+<button onclick="restartGame()">重新開始</button>
+<div class="result" id="result"></div>
