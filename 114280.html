@@ -8,43 +8,17 @@
   </head>
   <body>
 <!DOCTYPE html>
-}
-.container {
-max-width: 500px;
-margin: auto;
-background: white;
-padding: 20px;
-border-radius: 8px;
-}
-.section {
-margin-bottom: 20px;
-}
-input, textarea, button {
-width: 100%;
-padding: 8px;
-margin-top: 8px;
-box-sizing: border-box;
-}
-textarea {
-height: 100px;
-}
-.result {
-font-weight: bold;
-margin-top: 10px;
-}
-</style>
-</head>
-<body>
-<h1>幾A幾B 猜數字遊戲</h1>
-<div class="container">
+<option value="5">5 位數</option>
+</select>
+</div>
 
 
-<!-- 玩家輸入猜測 -->
 <div class="section">
-<label>玩家猜的數字（4 位不重複）</label>
+<label>玩家猜的數字（依選擇位數，不可重複）</label>
 <input type="text" id="guess" placeholder="例如：1234" />
 <button onclick="checkAB()">送出猜測</button>
 <div class="result" id="result"></div>
+<div class="history" id="history">尚未開始猜測</div>
 </div>
 
 
@@ -59,32 +33,63 @@ margin-top: 10px;
 
 
 <script>
+function generateAnswer(len) {
+let digits = [];
+while (digits.length < len) {
+let d = Math.floor(Math.random() * 10).toString();
+if (!digits.includes(d)) digits.push(d);
+}
+return digits.join("");
+}
+
+
+let digitCount = 4;
+let guessCount = 0;
+let answer = generateAnswer(digitCount);
 // 系統答案（可之後改成隨機）
-const answer = "1234";
 
 
 function checkAB() {
+guessCount++;
 const guess = document.getElementById("guess").value;
 let A = 0;
 let B = 0;
 
 
-if (guess.length !== 4) {
-document.getElementById("result").innerText = "請輸入 4 位數字";
+if (guess.length !== digitCount) {
+document.getElementById("result").innerText = `請輸入 ${digitCount} 位數字`;
 return;
 }
 
 
-for (let i = 0; i < 4; i++) {
+for (let i = 0; i < digitCount; i++) {
 if (guess[i] === answer[i]) {
 A++;
-  } else if (answer.includes(guess[i])) {
+} else if (answer.includes(guess[i])) {
 B++;
 }
 }
 
 
 document.getElementById("result").innerText = `${A}A ${B}B`;
+const historyDiv = document.getElementById("history");
+if (historyDiv.innerText === "尚未開始猜測") historyDiv.innerText = "";
+historyDiv.innerHTML += `第 ${guessCount} 次：${guess} → ${A}A ${B}B<br>`;
+
+
+if (A === digitCount) {
+document.getElementById("result").innerText = "Congratulations!! 🎉";
+}
+}
+function restartGame() {
+digitCount = parseInt(document.getElementById("digitCount").value);
+answer = generateAnswer(digitCount);
+guessCount = 0;
+document.getElementById("guess").value = "";
+document.getElementById("result").innerText = "";
+document.getElementById("history").innerText = "尚未開始猜測";
+document.getElementById("guess").placeholder = `例如：${"12345".slice(0, digitCount)}`;
+}`;
 }
 </script>
 </body>
